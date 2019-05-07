@@ -37,9 +37,8 @@ use runtime_primitives::{
 };
 use runtime_primitives::transaction_validity::TransactionValidity;
 use runtime_primitives::traits::{
-    self, Verify, BlakeTwo256, Block as BlockT,
-    AuthorityIdFor, DigestFor, NumberFor,
-    StaticLookup, CurrencyToVoteHandler
+    self, Verify, BlakeTwo256, Block as BlockT, Convert,
+    AuthorityIdFor, DigestFor, NumberFor, StaticLookup
 };
 use grandpa::fg_primitives::{self, ScheduledChange};
 use client::{
@@ -123,8 +122,8 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
     spec_name: create_runtime_str!("robonomics"),
     impl_name: create_runtime_str!("robonomics-node"),
     authoring_version: 1,
-    spec_version: 22,
-    impl_version: 23,
+    spec_version: 30,
+    impl_version: 30,
     apis: RUNTIME_API_VERSIONS,
 };
 
@@ -135,6 +134,20 @@ pub fn native_version() -> NativeVersion {
         runtime_version: VERSION,
         can_author_with: Default::default(),
     }
+}
+
+pub struct CurrencyToVoteHandler;
+
+impl CurrencyToVoteHandler {
+    fn factor() -> u128 { (Balances::total_issuance() / u64::max_value() as u128).max(1) }
+}
+
+impl Convert<u128, u64> for CurrencyToVoteHandler {
+    fn convert(x: u128) -> u64 { (x / Self::factor()) as u64 }
+}
+
+impl Convert<u128, u128> for CurrencyToVoteHandler {
+    fn convert(x: u128) -> u128 { x * Self::factor() }
 }
 
 impl system::Trait for Runtime {
@@ -284,7 +297,7 @@ pub type UncheckedExtrinsic = generic::UncheckedMortalCompactExtrinsic<Address, 
 /// Extrinsic type that has already been checked.
 pub type CheckedExtrinsic = generic::CheckedExtrinsic<AccountId, Nonce, Call>;
 /// Executive: handles dispatch to the various modules.
-pub type Executive = executive::Executive<Runtime, Block, Context, Balances, AllModules>;
+pub type Executive = executive::Executive<Runtime, Block, Context, Balances, Runtime, AllModules>;
 
 // Implement our runtime API endpoints. This is just a bunch of proxying.
 impl_runtime_apis! {

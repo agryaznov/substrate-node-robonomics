@@ -26,13 +26,11 @@ use robonomics_runtime::{
 use substrate_service::{self, Properties};
 use serde_json::json;
 
-/*
-use hex_literal::{hex, hex_impl};
+use hex_literal::hex;
 use primitives::crypto::UncheckedInto;
 use telemetry::TelemetryEndpoints;
 
 const STAGING_TELEMETRY_URL: &str = "wss://telemetry.polkadot.io/submit/";
-*/
 
 /// Specialised `ChainSpec`. This is a specialisation of the general Substrate ChainSpec type.
 pub type ChainSpec = substrate_service::ChainSpec<GenesisConfig>;
@@ -195,12 +193,13 @@ fn xrt_props() -> Properties {
     json!({"tokenDecimals": 9, "tokenSymbol": "XRT"}).as_object().unwrap().clone()
 }
 
+/*
 /// Robonomics testnet config. 
 pub fn robonomics_testnet_config() -> ChainSpec {
     ChainSpec::from_embedded(include_bytes!("../../res/robonomics_testnet.json")).unwrap()
 }
+*/
 
-/*
 /// Robonomics testnet config. 
 fn robonomics_config_genesis() -> GenesisConfig {
     let aira_auth: AuthorityId  = hex!["30d3114363ff180bb295099c34fb30060e3b2df89617f7d76078b37d4d351cca"].unchecked_into();
@@ -224,12 +223,6 @@ fn robonomics_config_genesis() -> GenesisConfig {
 /// Robonomics testnet config.
 pub fn robonomics_testnet_config() -> ChainSpec {
     let boot_nodes = vec![
-        "/ip4/164.132.111.49/tcp/30333/p2p/QmbPgV4iTsWHhrZDTPU5g1YtxJ11PcGC3f9oMTaNLUvJ6m".into(),
-        "/ip4/54.38.53.77/tcp/30333/p2p/QmPVJKr8TkLkDF98BYyySxe2bVJ2BY9epXvmdCkExwtp2Q".into(),
-        "/ip4/139.162.132.141/tcp/30333/p2p/QmUQhKfBKfb5jMstpQ5kUER5HzVsLLJysyewnFDHEveHkh".into(),
-        "/ip6/2001:41d0:401:3100::34e6/tcp/30333/p2p/QmbPgV4iTsWHhrZDTPU5g1YtxJ11PcGC3f9oMTaNLUvJ6m".into(),
-        "/ip6/fc6c:99a2:171a:f36a:8cd0:cc6b:efb7:8bb4/tcp/30333/p2p/QmbPgV4iTsWHhrZDTPU5g1YtxJ11PcGC3f9oMTaNLUvJ6m".into(),
-        "/ip6/fcaa:9c13:6ea4:4b92:8b9b:9:2390:52c1/tcp/30333/p2p/QmduvgCG1Tfj2P1oLRDjGzrhto4PKmSUtCGCNKoKEvNHxL".into(),
         "/ip6/fc59:cb90:5852:7fe3:a759:57d9:f546:a3a8/tcp/30333/p2p/QmUQhKfBKfb5jMstpQ5kUER5HzVsLLJysyewnFDHEveHkh".into(),
     ];
     ChainSpec::from_genesis(
@@ -243,7 +236,6 @@ pub fn robonomics_testnet_config() -> ChainSpec {
         Some(xrt_props())
     )
 }
-*/
 
 fn development_config_genesis() -> GenesisConfig {
     testnet_genesis(
